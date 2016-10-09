@@ -1,0 +1,7 @@
+version: '2'
+services:
+    db:
+        image: postgres
+        container_name: local_pest_db
+        ports:
+            - "54321:5432"

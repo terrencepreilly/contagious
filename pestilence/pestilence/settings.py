@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import urllib
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -37,8 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'graphene_django',
     'contact',
 ]
+
+GRAPHENE = {
+    'SCHEMA': 'contact.schema.schema',
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -74,10 +80,18 @@ WSGI_APPLICATION = 'pestilence.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+HOST = os.environ.get('DOCKER_HOST', 'localhost')
+if HOST != 'localhost':
+    HOST = urllib.parse.urlsplit(HOST).hostname
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'local_pest_db',
+        'USER': 'postgres',
+        'HOST': HOST,
+        'PASSWORD': 'postgres',
+        'PORT': 54321,
     }
 }
 
