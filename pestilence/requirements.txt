@@ -20,3 +20,5 @@ singledispatch==3.4.0.3
 six==1.10.0
 texttable==0.8.4
 websocket-client==0.37.0
+pylint==1.6.4
+flake8==3.0.4
