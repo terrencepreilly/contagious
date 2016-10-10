@@ -1,4 +1,5 @@
 """ `Profile` holds unique identifier information for a User """
+import uuid
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -12,6 +13,16 @@ class Profile(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
+        )
+
+    uuid = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+        help_text=('The unique identifier for our user. Since '
+                   'Java\'s UUID class also follows RFC 4122, '
+                   'there should be no problems using this id '
+                   'on both systems.')
         )
 
 
