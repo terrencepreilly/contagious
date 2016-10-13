@@ -8,7 +8,9 @@ from django.db.models import fields
 
 
 class Contact(models.Model):
+
     """ A single contact between two users. """
+
     start = fields.DateTimeField(
         null=False,
         blank=False,
