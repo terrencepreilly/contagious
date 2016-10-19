@@ -8,14 +8,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Schema for Contact
     + Query for `contacts` returns all contacts
+    + Query for `contact` with parameter `id` gives a given contact.
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
-
-
-
 
 ## [Unreleased] - YYYY-MM-DD
 ### Added

@@ -25,7 +25,7 @@ class ContactSchemaTestCase(TestCase):
         query = '''
             query {
                 contacts {
-                    start,
+                    start
                     end
                 }
             }
@@ -36,5 +36,22 @@ class ContactSchemaTestCase(TestCase):
         start_time = convert_time(start_time)
         self.assertEqual(start_time, self.start)
         end_time = result.data['contacts'][0]['end']
+        end_time = convert_time(end_time)
+        self.assertEqual(end_time, self.end)
+
+    def test_can_query_for_specific_contact(self):
+        query = '''
+            query {
+                contact(id: "%(id)s") {
+                    id
+                    start
+                    end
+                }
+            }
+        '''
+        query = query % {"id": self.contact.id}
+        result = schema.execute(query)
+        self.assertFalse(result.invalid)
+        end_time = result.data['contact']['end']
         end_time = convert_time(end_time)
         self.assertEqual(end_time, self.end)

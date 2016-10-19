@@ -9,15 +9,25 @@ class ContactType(DjangoObjectType):
 
     class Meta:
         model = Contact
+        only_fields = ('id', 'start', 'end')
 
 
-class Query(graphene.ObjectType):
+class QueryType(graphene.ObjectType):
 
+    name = 'Query'
+    description = 'Contacts are contiguous times when two people meet.'
+
+    contact = graphene.Field(ContactType, id=graphene.String())
     contacts = graphene.List(ContactType)
 
-    @graphene.resolve_only_args
-    def resolve_contacts(self, **kwargs):
+    def resolve_contacts(self, args, context, info):
         return Contact.objects.all()
 
+    def resolve_contact(self, args, context, info):
+        id = args.get('id')
+        try:
+            return Contact.objects.get(pk=id)
+        except Contact.DoesNotExist:
+            return None
 
-schema = graphene.Schema(query=Query)
+schema = graphene.Schema(query=QueryType)
