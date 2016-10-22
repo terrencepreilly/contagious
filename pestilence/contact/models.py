@@ -6,6 +6,8 @@ users.
 from django.db import models
 from django.db.models import fields
 
+from pest_auth.models import Profile
+
 
 class Contact(models.Model):
 
@@ -24,6 +26,12 @@ class Contact(models.Model):
         default=None,
         help_text=('The recorded end of an uninterrupted period '
                    'of contact between two users.'),
+        )
+
+    # change to a through table with profile
+    profiles = models.ManyToManyField(
+        Profile,
+        help_text=('The (at most two) profiles involved in the contact.'),
         )
 
     @property
