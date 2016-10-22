@@ -5,6 +5,8 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.test import TestCase
 
+import pytz
+
 from ..models import (
     Contact,
     )
@@ -16,8 +18,8 @@ class ContactModelTest(TestCase):
     def test_duration(self):
         """ duration() should give the time between the end and start """
         contact = Contact(
-            start=datetime(2001, 1, 1, 0, 0, 0),
-            end=datetime(2001, 1, 1, 4, 30, 5),
+            start=datetime(2001, 1, 1, 0, 0, 0, tzinfo=pytz.UTC),
+            end=datetime(2001, 1, 1, 4, 30, 5, tzinfo=pytz.UTC),
             )
 
         expected_seconds = float(4*60**2 + 30*60 + 5)
@@ -44,9 +46,9 @@ class ContactModelTest(TestCase):
         profile2 = create_user(2)
         profile3 = create_user(3)
 
-        contact = Contact.objects.create(  # pylint:disable=no-member
-            start=datetime(2001, 1, 1, 0, 0, 0),
-            end=datetime(2001, 1, 1, 4, 30, 5),
+        contact = Contact.objects.create(
+            start=datetime(2001, 1, 1, 0, 0, 0, tzinfo=pytz.UTC),
+            end=datetime(2001, 1, 1, 4, 30, 5, tzinfo=pytz.UTC),
             )
         contact.profiles.add(profile1)
         contact.profiles.add(profile2)
