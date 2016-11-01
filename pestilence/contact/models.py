@@ -41,6 +41,7 @@ class Contact(models.Model):
         """ The duration of time two users were near one another. """
         return self.end - self.start
 
+
 def validate_profiles(sender, **kwargs):
     msg = 'At most two profiles can be involved in a contact.'
     action = kwargs.get('action', None)

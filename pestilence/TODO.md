@@ -1,16 +1,14 @@
 # contact
-- [ ] Contact Model
-  - [ ] Add Geographic location data
-  - [x] Add identifiers for two phones
+- [x] Contact Model
+  - [ ] Add Geographic location data (?)
   - [ ] Add many-to-many link to other `Contacts` of this person during the duration of this `Contact` (?)
-  - [ ] Add GraphQL hook
-  - [ ] Make Profile at most two with signals
+  - [x] Make Profile at most two with signals
+  - [x] Add identifiers for two phones
+  - [x] Add GraphQL hook
 
 - [ ] pest_auth
-  - [ ] PestUser
   - [ ] Add app
-  - [ ] Add user model
-  - [ ] Add UUID for user to communicate through LEB.
+  - [x] Add UUID for user to communicate through LEB.
   - [ ] Add GraphQL hook
 
 - [ ] Research

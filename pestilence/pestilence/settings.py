@@ -32,7 +32,7 @@ INSTALLED_APPS = [
 ]
 
 GRAPHENE = {
-    'SCHEMA': 'contact.schema.schema',
+    'SCHEMA': 'pestilence.schema.schema',
 }
 
 MIDDLEWARE = [

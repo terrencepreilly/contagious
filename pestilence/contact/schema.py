@@ -29,5 +29,3 @@ class QueryType(graphene.ObjectType):
             return Contact.objects.get(pk=id)
         except Contact.DoesNotExist:
             return None
-
-schema = graphene.Schema(query=QueryType)
