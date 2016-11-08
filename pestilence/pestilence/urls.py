@@ -3,10 +3,8 @@ from django.contrib import admin
 
 from graphene_django.views import GraphQLView
 
-from .schema import (
-    schema,
-    profile_schema,
-    )
+from pestilence.schema import schema  # noqa: F401
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),

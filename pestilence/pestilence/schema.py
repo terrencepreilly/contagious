@@ -1,9 +1,32 @@
 """Join all of the schemas"""
 
 import graphene
+import graph_auth.schema
 
-from contact.schema import QueryType as contact_query
-from pest_auth.schema import QueryType as profile_query
+from contact.schema import (
+    ContactQueryType,
+    )
+from pest_auth.schema import (
+    ProfileQueryType,
+    )
 
-schema = graphene.Schema(query=contact_query)
-profile_schema = graphene.Schema(query=profile_query)
+
+class QueryType(ContactQueryType,
+                ProfileQueryType,
+                graph_auth.schema.Query,
+                graphene.ObjectType):
+
+    name = 'Query'
+    description = 'Queries for pestilence'
+
+    node = graphene.relay.Node.Field()
+
+    # "inherit" class attributes
+    # TODO: Is there a better way to do these?
+    profiles = ProfileQueryType.profiles
+
+    contact = ContactQueryType.contact
+    contacts = ContactQueryType.contacts
+
+
+schema = graphene.Schema(query=QueryType)

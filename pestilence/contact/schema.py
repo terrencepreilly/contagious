@@ -12,10 +12,7 @@ class ContactType(DjangoObjectType):
         only_fields = ('id', 'start', 'end')
 
 
-class QueryType(graphene.ObjectType):
-
-    name = 'Query'
-    description = 'Contacts are contiguous times when two people meet.'
+class ContactQueryType(object):
 
     contact = graphene.Field(ContactType, id=graphene.String())
     contacts = graphene.List(ContactType)

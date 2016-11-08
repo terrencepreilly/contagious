@@ -13,10 +13,7 @@ class ProfileType(DjangoObjectType):
         only_fields = ('uuid',)
 
 
-class QueryType(graphene.ObjectType):
-
-    name = 'Query'
-    description = 'Profiles are the front-facing part of a user.'
+class ProfileQueryType(object):
 
     profiles = graphene.List(ProfileType)
 

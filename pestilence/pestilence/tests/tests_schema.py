@@ -3,9 +3,9 @@ from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from django.test import TestCase
 
-from ..schema import schema
 from contact.models import Contact
 from pest_auth.models import Profile
+from pestilence.schema import schema
 
 
 def convert_time(t: str):
