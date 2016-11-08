@@ -1,7 +1,6 @@
 """Join all of the schemas"""
 
 import graphene
-import graph_auth.schema
 
 from contact.schema import (
     ContactQueryType,
@@ -13,7 +12,6 @@ from pest_auth.schema import (
 
 class QueryType(ContactQueryType,
                 ProfileQueryType,
-                graph_auth.schema.Query,
                 graphene.ObjectType):
 
     name = 'Query'

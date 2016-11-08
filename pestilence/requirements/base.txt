@@ -10,4 +10,3 @@ pytz==2016.7
 # API
 graphene==1.0.2
 graphene-django==1.0
-django-graph-auth==0.3.0
