@@ -4,6 +4,7 @@ import graphene
 
 from contact.schema import (
     ContactQueryType,
+    AddContact,
     )
 from pest_auth.schema import (
     ProfileQueryType,
@@ -27,4 +28,11 @@ class QueryType(ContactQueryType,
     contacts = ContactQueryType.contacts
 
 
-schema = graphene.Schema(query=QueryType)
+class ContactMutation(graphene.ObjectType):
+    add_contact = AddContact.Field()
+
+
+schema = graphene.Schema(
+    query=QueryType,
+    mutation=ContactMutation,
+    )

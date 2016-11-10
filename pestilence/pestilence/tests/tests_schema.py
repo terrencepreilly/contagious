@@ -58,6 +58,38 @@ class ContactSchemaTestCase(TestCase):
         end_time = convert_time(end_time)
         self.assertEqual(end_time, self.end)
 
+    def test_add_contact(self):
+        start = timezone.now()
+        user1 = User.objects.create_user('test', 'test@test.com', 'test')
+        profile1 = user1.profile
+        user2 = User.objects.create_user('test2', 'test2@test.com', 'test2')
+        profile2 = user2.profile
+        mutation = '''
+        mutation ContactMutation {
+            addContact(
+                    id1: "%(id1)s",
+                    id2: "%(id2)s",
+                    start: "%(start)s",
+                    end: "%(end)s") {
+                contact {
+                    id
+                }
+            }
+        }
+        '''
+        end = timezone.now()
+        mutation = mutation % {
+            'id1': profile1.uuid,
+            'id2': profile2.uuid,
+            'start': start,
+            'end': end,
+            }
+        result = schema.execute(mutation)
+        self.assertFalse(
+            result.invalid,
+            str(result.errors),
+            )
+
 
 class ProfileSchemaTestCase(TestCase):
 
