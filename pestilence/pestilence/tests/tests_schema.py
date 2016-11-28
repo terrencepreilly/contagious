@@ -90,6 +90,28 @@ class ContactSchemaTestCase(TestCase):
             str(result.errors),
             )
 
+    def test_add_contact_with_bad_data_returns_error(self):
+        start = timezone.now()
+        mutation = '''
+        mutation ContactMutation {
+            addContact(
+                    id1: "invaliduuid",
+                    id2: "invaliduuid",
+                    start: "%(start)s",
+                    end: "%(end)s") {
+                contact {
+                    id
+                }
+            }
+        }
+        '''
+        mutation = mutation % {
+            'start': start,
+            'end': timezone.now(),
+            }
+        result = schema.execute(mutation)
+        self.assertTrue(result.invalid)
+
 
 class ProfileSchemaTestCase(TestCase):
 

@@ -32,6 +32,8 @@ class ContactQueryType(object):
 
 
 class AddContact(graphene.Mutation):
+    """Mutation for creating a new Contact."""
+
     class Input:
         id1 = graphene.String()
         id2 = graphene.String()
@@ -42,6 +44,16 @@ class AddContact(graphene.Mutation):
     # TODO add error field
 
     def mutate(self, args, context, info):
+        """Create a new Contact
+
+        args:
+            id1: The uuid for the first profile in the contact.
+            id2: The uuid for the second profile in the contact.
+            start: The start time (from the phone's perspective)
+                of the contact.
+            end: The end time (from the phone's perspective)
+                of the contact.
+        """
         # TODO add error checking
         start = parse_datetime(args.get('start'))
         end = parse_datetime(args.get('end'))

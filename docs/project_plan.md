@@ -40,3 +40,11 @@ source apps: a README.md, documentation in the form of unit
 tests (for the backend, anyway), and maybe a short writeup
 for the phone app itself.  I'll probably write all of this in
 markdown, and use pandoc to convert to PDF or HTML on a whim.
+
+# Log
+
+### 2016-11-10T16:16:09-0500
+  Ran into a slight problem: Docker and QEMU can't run at the
+  same time.  So, in order to actually test tying the app and
+  the backend together, the backend will need to be deployed
+  somehow.

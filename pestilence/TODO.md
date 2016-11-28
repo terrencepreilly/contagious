@@ -1,4 +1,8 @@
-# contact
+- [ ] Profile
+  - [ ] Add mutation to create Profile
+  - [ ] Add query to get all pertinent information
+        related to the Profile
+
 - [x] Contact Model
   - [ ] Add Geographic location data (?)
   - [ ] Add many-to-many link to other `Contacts` of this person during the duration of this `Contact` (?)
