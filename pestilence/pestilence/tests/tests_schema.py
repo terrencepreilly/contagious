@@ -13,6 +13,16 @@ def convert_time(t: str):
     return parse_datetime(t)
 
 
+def _create_user(number):  # pylint:disable=missing-docstring
+    name = 'test{}'.format(number)
+    user = User.objects.create_user(
+        name,
+        name + '@example.com',
+        name + 'password',
+        )
+    return user.profile
+
+
 class ContactSchemaTestCase(TestCase):
 
     def setUp(self):
@@ -57,6 +67,24 @@ class ContactSchemaTestCase(TestCase):
         end_time = result.data['contact']['end']
         end_time = convert_time(end_time)
         self.assertEqual(end_time, self.end)
+
+    def test_query_for_contact_by_profile_uuid(self):
+        query = '''
+            query {
+                contacts(uuid: "%(uuid)s") {
+                    id
+                    start
+                    end
+                }
+            }
+        '''
+        profile = _create_user(1)
+        query = query % {"uuid": profile.uuid}
+        self.contact.profiles.add(profile)
+        self.contact.save()
+        result = schema.execute(query)
+        self.assertFalse(result.invalid, str(result.errors))
+        self.assertEqual(len(result.data['contacts']), 1)
 
     def test_add_contact(self):
         start = timezone.now()

@@ -12,7 +12,7 @@ class ContactType(DjangoObjectType):
 
     class Meta:
         model = Contact
-        only_fields = ('id', 'start', 'end')
+        only_fields = ('id', 'start', 'end', 'profiles')
 
 
 class ContactQueryType(object):
