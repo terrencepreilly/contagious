@@ -21,3 +21,15 @@
   - [ ] What is the conditional probability of a contact making a person sick given that the other person is sick?
   - [ ] What is the probability that a person will get sick during a given week?
   - [ ] What is the projected cost per person to a business for sickness?
+
+- [ ] This weekend
+  - [x] mutation for creating new user
+  - [ ] phone stores its UUID in temporary storage
+  - [ ] phone gets statistics
+  - [ ] group model
+    - [x] mutation for creating group
+    - [ ] mutation for adding self to group
+    - [ ] view group statistics
+  - [ ] sign-up button
+  - [ ] place to enter backend IP address
+  - [ ] join group button / text field

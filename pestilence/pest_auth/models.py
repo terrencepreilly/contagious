@@ -25,6 +25,10 @@ class Profile(models.Model):
                    'on both systems.')
         )
 
+    @property
+    def count(self):
+        return self.contact_set.count()
+
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):

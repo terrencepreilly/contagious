@@ -8,11 +8,15 @@ from contact.schema import (
     )
 from pest_auth.schema import (
     ProfileQueryType,
+    GroupQueryType,
+    AddGroup,
+    AddProfile,
     )
 
 
 class QueryType(ContactQueryType,
                 ProfileQueryType,
+                GroupQueryType,
                 graphene.ObjectType):
 
     name = 'Query'
@@ -22,17 +26,22 @@ class QueryType(ContactQueryType,
 
     # "inherit" class attributes
     # TODO: Is there a better way to do these?
+    profile = ProfileQueryType.profile
     profiles = ProfileQueryType.profiles
 
     contact = ContactQueryType.contact
     contacts = ContactQueryType.contacts
 
+    groups = GroupQueryType.groups
 
-class ContactMutation(graphene.ObjectType):
+
+class Mutation(graphene.ObjectType):
     add_contact = AddContact.Field()
+    add_profile = AddProfile.Field()
+    add_group = AddGroup.Field()
 
 
 schema = graphene.Schema(
     query=QueryType,
-    mutation=ContactMutation,
+    mutation=Mutation,
     )
