@@ -101,3 +101,23 @@ class AddGroup(graphene.Mutation):
         name = args.get('name')
         group = Group.objects.create(name=name)
         return AddGroup(group=group)
+
+
+class AddUserToGroup(graphene.Mutation):
+    """Mutation for adding users to a group."""
+
+    class Input:
+        uuid = graphene.String()
+        group_id = graphene.Int()
+
+    group = graphene.Field(GroupType)
+
+    def mutate(self, args, context, info):
+        uuid = args.get('uuid')
+        group_id = args.get('group_id')
+        group = Group.objects.get(id=group_id)
+        profile = Profile.objects.get(uuid=uuid)
+        user = profile.user
+        user.groups.add(group)
+        user.save()
+        return group

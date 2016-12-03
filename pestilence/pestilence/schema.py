@@ -11,6 +11,7 @@ from pest_auth.schema import (
     GroupQueryType,
     AddGroup,
     AddProfile,
+    AddUserToGroup,
     )
 
 
@@ -39,6 +40,7 @@ class Mutation(graphene.ObjectType):
     add_contact = AddContact.Field()
     add_profile = AddProfile.Field()
     add_group = AddGroup.Field()
+    add_user_to_group = AddUserToGroup.Field()
 
 
 schema = graphene.Schema(

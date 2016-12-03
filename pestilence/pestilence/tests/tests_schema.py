@@ -241,3 +241,43 @@ class GroupSchemaTestCase(TestCase):
         '''
         result = schema.execute(query)
         self.assertFalse(result.invalid, str(result.errors))
+
+    def test_add_user_to_group(self):
+        group = Group.objects.create(name='testgroup')
+        mutation = '''
+            mutation GroupMutation {
+                addUserToGroup(uuid: "%(uuid)s", groupId: %(group_id)s) {
+                    group {
+                        name
+                        profiles {
+                            uuid
+                        }
+                    }
+                }
+            }
+        '''
+        mutation = mutation % {
+            'uuid': self.user.profile.uuid,
+            'group_id': group.id,
+            }
+        result = schema.execute(mutation)
+        self.assertFalse(result.invalid, str(result.errors))
+        self.assertEqual(self.user.groups.first(), group)
+
+    def test_group_list_profiles(self):
+        group = Group.objects.create(name='testgroup')
+        self.user.groups.add(group)
+        self.user.save()
+        query = '''
+            query {
+                groups {
+                    profiles {
+                        uuid
+                    }
+                }
+            }
+        '''
+        result = schema.execute(query)
+        self.assertFalse(result.invalid)
+        self.assertTrue(len(result.data['groups']), 1)
+        self.assertTrue(len(result.data['groups'][0]['profiles']), 1)
