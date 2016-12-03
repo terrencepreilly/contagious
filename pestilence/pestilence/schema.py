@@ -33,6 +33,7 @@ class QueryType(ContactQueryType,
     contact = ContactQueryType.contact
     contacts = ContactQueryType.contacts
 
+    group = GroupQueryType.group
     groups = GroupQueryType.groups
 
 

@@ -26,16 +26,22 @@ class UserInputType(graphene.InputObjectType):
 
 class GroupType(DjangoObjectType):
 
+    count = graphene.Int()
     profiles = graphene.List(ProfileType)
+    name = graphene.String()
+    id = graphene.Int()
 
     def resolve_profiles(self, args, context, info):
         users = self.user_set.all()
         profiles = [user.profile for user in users]
         return profiles
 
+    def resolve_count(self, args, context, info):
+        return sum([x.profile.count for x in self.user_set.all()])
+
     class Meta:
         model = Group
-        only_fields = ('name', 'profiles')
+        only_fields = ('name', 'profiles', 'count', 'id')
 
 
 class GroupInputType(graphene.InputObjectType):
@@ -61,10 +67,18 @@ class ProfileQueryType(object):
 
 class GroupQueryType(object):
 
+    group = graphene.Field(GroupType, name=graphene.String())
     groups = graphene.List(GroupType)
 
     def resolve_groups(self, args, context, info):
         return Group.objects.all()
+
+    def resolve_group(self, args, context, info):
+        name = args.get('name')
+        try:
+            return Group.objects.get(name=name)
+        except Group.DoesNotExist:
+            return None
 
 
 class AddProfile(graphene.Mutation):

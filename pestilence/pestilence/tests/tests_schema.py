@@ -278,6 +278,23 @@ class GroupSchemaTestCase(TestCase):
             }
         '''
         result = schema.execute(query)
-        self.assertFalse(result.invalid)
+        self.assertFalse(result.invalid, result.errors)
         self.assertTrue(len(result.data['groups']), 1)
         self.assertTrue(len(result.data['groups'][0]['profiles']), 1)
+        self.assertEqual(result.data['groups'][0]['profiles'][0]['uuid'],
+                         str(self.user.profile.uuid))
+
+    def test_can_view_count_of_views_in_group(self):
+        group = Group.objects.create(name='testgroup')
+        self.user.groups.add(group)
+        self.user2.groups.add(group)
+        query = '''
+            query {
+                group(name: "%(name)s") {
+                    count
+                }
+            }
+            '''
+        query = query % {'name': group.name}
+        result = schema.execute(query)
+        self.assertFalse(result.invalid, result.errors)
