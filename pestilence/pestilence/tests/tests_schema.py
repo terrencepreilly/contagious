@@ -199,6 +199,34 @@ class ProfileSchemaTestCase(TestCase):
         self.assertTrue(prev_users+1, User.objects.count())
         self.assertTrue(prev_profs+1, Profile.objects.count())
 
+    def test_create_existing_user_returns_profile(self):
+        prev_users = User.objects.count()
+        prev_profs = Profile.objects.count()
+        mutation = '''
+            mutation ProfileMutation {
+                addProfile(username: "%(username)s",
+                           email: "%(email)s",
+                           password: "random information") {
+                    profile {
+                        uuid
+                    }
+               }
+            }
+        '''
+        mutation = mutation % {
+            'username': self.user.username,
+            'email': self.user.email,
+            }
+        result = schema.execute(mutation)
+        self.assertFalse(result.invalid, str(result.errors))
+        self.assertTrue('uuid' in result.data['addProfile']['profile'])
+        self.assertEqual(
+            result.data['addProfile']['profile']['uuid'],
+            str(self.user.profile.uuid),
+            )
+        self.assertTrue(prev_users, User.objects.count())
+        self.assertTrue(prev_profs, Profile.objects.count())
+
 
 class GroupSchemaTestCase(TestCase):
 

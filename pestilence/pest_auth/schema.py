@@ -95,6 +95,9 @@ class AddProfile(graphene.Mutation):
         username = args.get('username')
         email = args.get('email')
         password = args.get('password')
+        user = User.objects.filter(username=username)
+        if user.count() > 0:
+            return AddProfile(profile=user.first().profile)
         user = User.objects.create_user(
             username=username,
             email=email,
