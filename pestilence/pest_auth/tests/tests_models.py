@@ -32,6 +32,8 @@ class ProfileTest(TestCase):
     def test_sickdays_measures_days(self):
         """Make sure that it actually measures days."""
         profile = Profile.objects.first()
+        profile.start_sickness = []
+        profile.end_sickness = []
         profile.start_sickness.append(
             datetime(2011, 1, 1, 0, 0, 0, tzinfo=pytz.UTC)
             )
@@ -40,3 +42,10 @@ class ProfileTest(TestCase):
             )
         profile.save()
         self.assertEqual(profile.sickdays, 1)
+
+    def test_sickdays_with_nothing(self):
+        profile = Profile.objects.first()
+        profile.start_sickness = []
+        profile.end_sickness = []
+        profile.save()
+        self.assertEqual(profile.sickdays, 0)

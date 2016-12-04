@@ -48,6 +48,18 @@ class GroupType(DjangoObjectType):
         only_fields = ('name', 'profiles', 'count', 'id')
 
 
+class AdvancedProfileType(ProfileType):
+
+    groups = graphene.List(GroupType)
+
+    def resolve_groups(self, args, context, info):
+        return self.user.groups.all()
+
+    class Meta:
+        model = Profile
+        only_fields = ('uuid', 'count', 'status', 'sickdays', 'groups')
+
+
 class GroupInputType(graphene.InputObjectType):
 
     name = graphene.String(required=True)
@@ -55,8 +67,8 @@ class GroupInputType(graphene.InputObjectType):
 
 class ProfileQueryType(object):
 
-    profile = graphene.Field(ProfileType, uuid=graphene.String())
-    profiles = graphene.List(ProfileType)
+    profile = graphene.Field(AdvancedProfileType, uuid=graphene.String())
+    profiles = graphene.List(AdvancedProfileType)
 
     def resolve_profiles(self, args, context, info):
         return Profile.objects.all()
