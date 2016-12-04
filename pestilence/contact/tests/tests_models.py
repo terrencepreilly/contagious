@@ -1,14 +1,21 @@
 """ Model tests """
-from datetime import datetime
+from datetime import (
+    datetime,
+    timedelta,
+    )
 
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.utils import timezone
 
 import pytz
 
 from ..models import (
     Contact,
+    )
+from pest_auth.models import (
+    Profile,
     )
 
 
@@ -30,21 +37,24 @@ class ContactModelTest(TestCase):
             'Duration() should give the time between end and start.'
             )
 
+    def create_user(self, number):  # pylint:disable=missing-docstring
+        name = 'test{}'.format(number)
+        user = User.objects.create_user(
+            name,
+            name + '@example.com',
+            name + 'password',
+            )
+        return user.profile
+
+    def refresh_profile(self, profile):  # pylint:disable=missing-docstring
+        return Profile.objects.get(profile.uuid)
+
     def test_only_two_profiles_can_be_added(self):
         """ Only at most two profiles should be able to be added ever. """
 
-        def create_user(number):  # pylint:disable=missing-docstring
-            name = 'test{}'.format(number)
-            user = User.objects.create_user(
-                name,
-                name + '@example.com',
-                name + 'password',
-                )
-            return user.profile
-
-        profile1 = create_user(1)
-        profile2 = create_user(2)
-        profile3 = create_user(3)
+        profile1 = self.create_user(1)
+        profile2 = self.create_user(2)
+        profile3 = self.create_user(3)
 
         contact = Contact.objects.create(
             start=datetime(2001, 1, 1, 0, 0, 0, tzinfo=pytz.UTC),
@@ -55,3 +65,31 @@ class ContactModelTest(TestCase):
 
         with self.assertRaises(ValidationError):
             contact.profiles.add(profile3)
+
+    def test_adding_sick_person_to_contact_infects_other(self):
+        """ Sickness spreads automatically. """
+        profile1 = self.create_user(1)
+        profile2 = self.create_user(2)
+        profile1.infect()
+        contact = Contact.objects.create(
+            start=timezone.now(),
+            end=timezone.now() + timedelta(seconds=18000),
+            )
+        contact.profiles.add(profile1)
+        contact.profiles.add(profile2)
+        profile2 = Profile.objects.get(uuid=profile2.uuid)
+        self.assertEqual(profile2.status, 'SICK')
+
+    def test_adding_healthy_people_to_contact_does_not_infect(self):
+        """ Sickness doesn't spawn randomly. """
+        profile1 = self.create_user(1)
+        profile2 = self.create_user(2)
+        contact = Contact.objects.create(
+            start=timezone.now(),
+            end=timezone.now() + timedelta(seconds=18000),
+            )
+        contact.profiles.add(profile1)
+        contact.profiles.add(profile2)
+        self.assertTrue(all(
+            [x.status == 'HEALTHY' for x in contact.profiles.all()]
+            ))

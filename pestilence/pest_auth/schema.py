@@ -1,5 +1,7 @@
 """The schema for profiles."""
 
+from random import Random
+
 from django.contrib.auth.models import Group, User
 
 import graphene
@@ -11,10 +13,11 @@ from .models import Profile
 class ProfileType(DjangoObjectType):
 
     count = graphene.Int()
+    status = graphene.String()
 
     class Meta:
         model = Profile
-        only_fields = ('uuid', 'count')
+        only_fields = ('uuid', 'count', 'status')
 
 
 class UserInputType(graphene.InputObjectType):
@@ -103,6 +106,8 @@ class AddProfile(graphene.Mutation):
             email=email,
             password=password,
             )
+        if Random().random() < 0.05:
+            user.profile.infect()
         return AddProfile(profile=user.profile)
 
 

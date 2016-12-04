@@ -1,4 +1,5 @@
-from unittest import skip
+from random import Random
+from unittest import skip, mock
 from datetime import datetime
 import pytz
 
@@ -199,6 +200,28 @@ class ProfileSchemaTestCase(TestCase):
         self.assertTrue(prev_users+1, User.objects.count())
         self.assertTrue(prev_profs+1, Profile.objects.count())
 
+    @mock.patch('pest_auth.schema.Random')
+    def test_create_new_profile_can_be_sick(self, mock_random):
+        """ New users will start out sick about 20% of the time. """
+        mock_random.return_value = mock.create_autospec(Random)
+        mock_random.return_value.random.return_value = 0.01
+        mutation = '''
+            mutation ProfileMutation {
+                addProfile(username: "jerry",
+                           email: "jerry@aol.com",
+                           password: "jerryrocks") {
+                    profile {
+                        status
+                    }
+
+                }
+            }
+        '''
+        result = schema.execute(mutation)
+        self.assertFalse(result.invalid, str(result.errors))
+        self.assertEqual(result.data['addProfile']['profile']['status'],
+                         'SICK')
+
     def test_create_existing_user_returns_profile(self):
         prev_users = User.objects.count()
         prev_profs = Profile.objects.count()
@@ -226,6 +249,17 @@ class ProfileSchemaTestCase(TestCase):
             )
         self.assertTrue(prev_users, User.objects.count())
         self.assertTrue(prev_profs, Profile.objects.count())
+
+    def test_detail_shows_status(self):
+        query = '''
+            query {
+                profiles {
+                    status
+                }
+            }
+        '''
+        result = schema.execute(query)
+        self.assertFalse(result.invalid, str(result.errors))
 
 
 class GroupSchemaTestCase(TestCase):

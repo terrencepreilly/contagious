@@ -19,3 +19,10 @@ class ProfileTest(TestCase):
     def test_primary_key_is_uuid(self):
         profile = Profile.objects.first()
         self.assertTrue(isinstance(profile.pk, uuid.UUID))
+
+    def test_profile_has_status_which_changes_over_time(self):
+        profile = Profile.objects.first()
+        self.assertTrue(profile.status is not None)
+        self.assertEqual(profile.status, 'HEALTHY')
+        profile.infect()
+        self.assertEqual(profile.status, 'SICK')

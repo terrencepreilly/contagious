@@ -42,6 +42,13 @@ class Contact(models.Model):
         return self.end - self.start
 
 
+def spread_the_sickness(contact):
+    if any([x.status == 'SICK' for x in contact.profiles.all()]):
+        for profile in contact.profiles.all():
+            if profile.status != 'SICK':
+                profile.infect()
+
+
 def validate_profiles(sender, **kwargs):
     msg = 'At most two profiles can be involved in a contact.'
     action = kwargs.get('action', None)
@@ -49,5 +56,8 @@ def validate_profiles(sender, **kwargs):
     if action == 'pre_add' and isinstance(instance, Contact):
         if instance.profiles.count() == 2:
             raise ValidationError(msg)
+    if action == 'post_add' and instance.profiles.count() == 2:
+        spread_the_sickness(instance)
+
 
 m2m_changed.connect(validate_profiles, sender=Contact.profiles.through)
