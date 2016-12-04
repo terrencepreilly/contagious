@@ -48,8 +48,12 @@ class GroupType(DjangoObjectType):
         only_fields = ('name', 'profiles', 'count', 'id')
 
 
-class AdvancedProfileType(ProfileType):
+class AdvancedProfileType(DjangoObjectType):
+    """ The profile type, which includes displays of groups. """
 
+    count = graphene.Int()
+    status = graphene.String()
+    sickdays = graphene.Int()
     groups = graphene.List(GroupType)
 
     def resolve_groups(self, args, context, info):
