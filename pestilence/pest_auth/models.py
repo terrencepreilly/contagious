@@ -51,14 +51,17 @@ class Profile(models.Model):
         )
 
     @property
-    def status(self):
+    def sick(self):
         if len(self.start_sickness) == 0:
-            return 'HEALTHY'
+            return False
         now = timezone.now()
-        if self.start_sickness[-1] < now < self.end_sickness[-1]:
+        return self.start_sickness[-1] < now < self.end_sickness[-1]
+
+    @property
+    def status(self):
+        if self.sick:
             return 'SICK'
-        else:
-            return 'HEALTHY'
+        return 'HEALTHY'
 
     @property
     def count(self):

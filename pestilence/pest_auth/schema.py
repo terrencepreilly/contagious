@@ -34,6 +34,9 @@ class GroupType(DjangoObjectType):
     profiles = graphene.List(ProfileType)
     name = graphene.String()
     id = graphene.Int()
+    size = graphene.Int()
+    sick_member_amount = graphene.Int()
+    healthy_member_amount = graphene.Int()
 
     def resolve_profiles(self, args, context, info):
         users = self.user_set.all()
@@ -42,6 +45,19 @@ class GroupType(DjangoObjectType):
 
     def resolve_count(self, args, context, info):
         return sum([x.profile.count for x in self.user_set.all()])
+
+    def resolve_size(self, args, context, info):
+        return self.user_set.count()
+
+    def resolve_sick_member_amount(self, args, context, info):
+        amount = sum([1 for user in self.user_set.all()
+                      if user.profile.sick])
+        return amount
+
+    def resolve_healthy_member_amount(self, args, context, info):
+        amount = sum([1 for user in self.user_set.all()
+                      if user.profile.sick])
+        return self.user_set.count() - amount
 
     class Meta:
         model = Group

@@ -365,3 +365,21 @@ class GroupSchemaTestCase(TestCase):
         query = query % {'name': group.name}
         result = schema.execute(query)
         self.assertFalse(result.invalid, result.errors)
+
+    def test_can_view_stats(self):
+        """We should be able to see the number of members,
+        the number of currently sick members, and the number of
+        currently healthy members."""
+        group = Group.objects.create(name='testgroup')
+        query = '''
+            query {
+                group(name: "%(groupid)s") {
+                    size,
+                    sickMemberAmount,
+                    healthyMemberAmount,
+                }
+            }
+        '''
+        query = query % {'groupid': group.name}
+        result = schema.execute(query)
+        self.assertFalse(result.invalid, result.errors)
