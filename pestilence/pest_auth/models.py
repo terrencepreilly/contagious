@@ -64,6 +64,16 @@ class Profile(models.Model):
     def count(self):
         return self.contact_set.count()
 
+    @property
+    def sickdays(self):
+        """Calculates the total amount of time this user was sick."""
+        total_seconds = 0
+        for i in range(len(self.start_sickness)):
+            seconds = (self.end_sickness[i]
+                       - self.start_sickness[i]).total_seconds()
+            total_seconds += seconds
+        return round(total_seconds / (60 * 60 * 24))
+
     def infect(self):
         """Makes one sick from now until somewhere between 2 and 27
         hours from now."""

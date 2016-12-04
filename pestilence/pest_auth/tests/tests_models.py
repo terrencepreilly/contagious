@@ -1,4 +1,6 @@
 """ Test one-to-one link to User Model """
+from datetime import datetime
+import pytz
 import uuid
 
 from django.contrib.auth.models import User
@@ -26,3 +28,15 @@ class ProfileTest(TestCase):
         self.assertEqual(profile.status, 'HEALTHY')
         profile.infect()
         self.assertEqual(profile.status, 'SICK')
+
+    def test_sickdays_measures_days(self):
+        """Make sure that it actually measures days."""
+        profile = Profile.objects.first()
+        profile.start_sickness.append(
+            datetime(2011, 1, 1, 0, 0, 0, tzinfo=pytz.UTC)
+            )
+        profile.end_sickness.append(
+            datetime(2011, 1, 2, 0, 0, 0, tzinfo=pytz.UTC)
+            )
+        profile.save()
+        self.assertEqual(profile.sickdays, 1)

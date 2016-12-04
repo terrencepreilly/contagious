@@ -14,10 +14,11 @@ class ProfileType(DjangoObjectType):
 
     count = graphene.Int()
     status = graphene.String()
+    sickdays = graphene.Int()
 
     class Meta:
         model = Profile
-        only_fields = ('uuid', 'count', 'status')
+        only_fields = ('uuid', 'count', 'status', 'sickdays')
 
 
 class UserInputType(graphene.InputObjectType):

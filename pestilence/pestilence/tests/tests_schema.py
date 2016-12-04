@@ -250,11 +250,12 @@ class ProfileSchemaTestCase(TestCase):
         self.assertTrue(prev_users, User.objects.count())
         self.assertTrue(prev_profs, Profile.objects.count())
 
-    def test_detail_shows_status(self):
+    def test_detail_shows_status_days_sick(self):
         query = '''
             query {
                 profiles {
                     status
+                    sickdays
                 }
             }
         '''
